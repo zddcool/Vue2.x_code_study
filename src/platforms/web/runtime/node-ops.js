@@ -1,7 +1,16 @@
 /* @flow */
 
+/**
+ * 该文件将定义生成 dom 节点有关的方法
+ */
 import { namespaceMap } from 'web/util/index'
 
+/**
+ * 创建 Select ？
+ * @param {*} tagName select 
+ * @param {*} vnode 
+ * @returns 
+ */
 export function createElement (tagName: string, vnode: VNode): Element {
   const elm = document.createElement(tagName)
   if (tagName !== 'select') {
@@ -14,6 +23,11 @@ export function createElement (tagName: string, vnode: VNode): Element {
   return elm
 }
 
+/**
+ * @param {*} namespace svg / math
+ * @param {*} tagName 
+ * @returns 
+ */
 export function createElementNS (namespace: string, tagName: string): Element {
   return document.createElementNS(namespaceMap[namespace], tagName)
 }

@@ -33,6 +33,7 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
+  // 定位第一个非抽象父组件，Vue 中定义了 transition keep-alive 等抽象组件
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
@@ -46,7 +47,7 @@ export function initLifecycle (vm: Component) {
 
   vm.$children = []
   vm.$refs = {}
-
+  // 定义生命周期的内部状态变量
   vm._watcher = null
   vm._inactive = null
   vm._directInactive = false
@@ -69,6 +70,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
+      // 比较旧、新虚拟节点
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     restoreActiveInstance()

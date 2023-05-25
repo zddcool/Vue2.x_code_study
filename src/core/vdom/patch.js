@@ -32,6 +32,14 @@ export const emptyNode = new VNode('', {}, [])
 
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
+/**
+ * 判断输入的两个节点是否是相同的虚拟节点
+ * 1. 两个节点设置的key值是否相等
+ * 2. 相同的异步工厂函数
+ * 3. 如果是组件，相同的标签、数据、相同的输入类型
+ * 4. ...
+ * @returns { boolean }
+ */
 function sameVnode (a, b) {
   return (
     a.key === b.key &&
@@ -48,7 +56,10 @@ function sameVnode (a, b) {
     )
   )
 }
-
+/**
+ *  输入的两个vnode都是input标签时，判断是否是相同的input标签
+ * @returns { Boolean }
+ */
 function sameInputType (a, b) {
   if (a.tag !== 'input') return true
   let i
@@ -72,7 +83,7 @@ export function createPatchFunction (backend) {
   const cbs = {}
 
   const { modules, nodeOps } = backend
-
+  // 给modules中定义了hooks中的钩子函数存储到 cbs 对象中，hookName : [hookFn]的键值对形式
   for (i = 0; i < hooks.length; ++i) {
     cbs[hooks[i]] = []
     for (j = 0; j < modules.length; ++j) {
@@ -121,7 +132,7 @@ export function createPatchFunction (backend) {
   }
 
   let creatingElmInVPre = 0
-
+// 根据虚拟节点上的属性 tag ns text isComment等, 调用nodeOps上不同的创建DOM的方法
   function createElm (
     vnode,
     insertedVnodeQueue,

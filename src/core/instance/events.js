@@ -10,6 +10,7 @@ import {
 import { updateListeners } from '../vdom/helpers/index'
 
 export function initEvents (vm: Component) {
+  // _events对象是以事件名为键，值为回调函数数组
   vm._events = Object.create(null)
   vm._hasHookEvent = false
   // init parent attached events
@@ -54,10 +55,14 @@ export function eventsMixin (Vue: Class<Component>) {
   Vue.prototype.$on = function (event: string | Array<string>, fn: Function): Component {
     const vm: Component = this
     if (Array.isArray(event)) {
+      // 传入的是一组事件字符串数组，递归调用 $on
       for (let i = 0, l = event.length; i < l; i++) {
         vm.$on(event[i], fn)
       }
     } else {
+      // event 参数是事件字符串
+      // vm 实例属性 _events中是否存在当前 event 事件， _events对象是以事件名为键，值为回调函数数组
+      // 追加回调函数到 _events[event] 数组中
       (vm._events[event] || (vm._events[event] = [])).push(fn)
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup
@@ -83,26 +88,29 @@ export function eventsMixin (Vue: Class<Component>) {
     const vm: Component = this
     // all
     if (!arguments.length) {
+      // 不传参数，赋值新对象
       vm._events = Object.create(null)
       return vm
     }
     // array of events
     if (Array.isArray(event)) {
+      // 第一个参数是数组时，递归调用实例方法$off
       for (let i = 0, l = event.length; i < l; i++) {
         vm.$off(event[i], fn)
       }
       return vm
     }
-    // specific event
-    const cbs = vm._events[event]
+    // specific event 具体的事件
+    const cbs = vm._events[event] // 取出该事件对应的所有回调函数
     if (!cbs) {
       return vm
     }
     if (!fn) {
+      // 传入的回调为空，设置该事件的值为空
       vm._events[event] = null
       return vm
     }
-    // specific handler
+    // specific handler 具体的回调
     let cb
     let i = cbs.length
     while (i--) {
@@ -131,6 +139,7 @@ export function eventsMixin (Vue: Class<Component>) {
     }
     let cbs = vm._events[event]
     if (cbs) {
+      // 对具体事件的所有回调进行传参通知并调用
       cbs = cbs.length > 1 ? toArray(cbs) : cbs
       const args = toArray(arguments, 1)
       const info = `event handler for "${event}"`

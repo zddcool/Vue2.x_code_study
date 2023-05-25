@@ -14,6 +14,7 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
+  // _init method 定义在 Vue 的原型对象上，即每个 Vue 实例 都可调用此方法
   Vue.prototype._init = function (options?: Object) {
     // this 当前 Vue 实例
     const vm: Component = this
@@ -59,7 +60,7 @@ export function initMixin (Vue: Class<Component>) {
     initRender(vm) // 初始化创建元素的方法
     callHook(vm, 'beforeCreate') // 调用生命周期函数
     initInjections(vm) // resolve injections before data/props // 初始化注入器
-    initState(vm) // 重点：初始化状态数据 data props methods 等
+    initState(vm) // 重点：初始化状态数据 props methods data computed watch
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created') // 调用生命周期函数
 
@@ -99,6 +100,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
+// 合并构造器及构造器父级上定义的`options
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {

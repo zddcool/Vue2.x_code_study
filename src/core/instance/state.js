@@ -189,6 +189,11 @@ function initComputed (vm: Component, computed: Object) {
 
   for (const key in computed) {
     const userDef = computed[key]
+    /**
+     * getter 对应于 计算属性的两种使用形式
+     * 1. 函数式写法 可通过返回闭包传递参数
+     * 2. 对象式写法，指定 get 和 set 属性，默认只有 getter，即 get 属性
+     */
     const getter = typeof userDef === 'function' ? userDef : userDef.get
     if (process.env.NODE_ENV !== 'production' && getter == null) {
       warn(
@@ -198,7 +203,7 @@ function initComputed (vm: Component, computed: Object) {
     }
 
     if (!isSSR) {
-      // create internal watcher for the computed property.
+      // create internal watcher for the computed property. 给计算属性创建内部观察者对象
       watchers[key] = new Watcher(
         vm,
         getter || noop,
