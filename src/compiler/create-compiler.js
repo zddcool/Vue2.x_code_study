@@ -4,6 +4,11 @@ import { extend } from 'shared/util'
 import { detectErrors } from './error-detector'
 import { createCompileToFunctionFn } from './to-function'
 
+/**
+ * createCompilerCreator 是一个高阶函数，允许一个函数作为参数
+ * @param { Function } baseCompile 
+ * @returns { Function } 返回一个能创建编译器的函数，该函数调用后返回一个对象{ compile: Function, compileToFunctions }
+ */
 export function createCompilerCreator (baseCompile: Function): Function {
   return function createCompiler (baseOptions: CompilerOptions) {
     function compile (
@@ -57,7 +62,10 @@ export function createCompilerCreator (baseCompile: Function): Function {
       }
 
       finalOptions.warn = warn
-
+      /**
+       * 此处调用传入的baseCompile函数内部完成对模板的解析，优化、生成合并后的代码，函数执行后返回一个对象
+       * { ast, render, staticRenderFns }
+       */
       const compiled = baseCompile(template.trim(), finalOptions)
       if (process.env.NODE_ENV !== 'production') {
         detectErrors(compiled.ast, warn)
@@ -68,7 +76,7 @@ export function createCompilerCreator (baseCompile: Function): Function {
     }
 
     return {
-      compile,
+      compile, // function
       compileToFunctions: createCompileToFunctionFn(compile)
     }
   }

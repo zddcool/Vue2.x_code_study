@@ -5,7 +5,7 @@ import {
   noop,
   identity
 } from 'shared/util'
-
+// import lifecycle hooks name array.
 import { LIFECYCLE_HOOKS } from 'shared/constants'
 
 export type Config = {
@@ -35,6 +35,7 @@ export type Config = {
   _lifecycleHooks: Array<string>;
 };
 
+// 该文件定义了 Config 类型，导出默认的全局配置对象
 export default ({
   /**
    * Option merge strategies (used in core/util/options)

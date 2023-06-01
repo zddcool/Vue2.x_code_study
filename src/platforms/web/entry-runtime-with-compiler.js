@@ -14,8 +14,9 @@ const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
-
+// 备份原有的$mount函数，原函数内部调用挂载组件的方法mountComponent
 const mount = Vue.prototype.$mount
+// 函数拦截，重新定义$mount方法
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
@@ -80,6 +81,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // 调用原有的$mount方法
   return mount.call(this, el, hydrating)
 }
 
