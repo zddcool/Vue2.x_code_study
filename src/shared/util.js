@@ -163,6 +163,7 @@ export function cached<F: Function> (fn: F): F {
 
 /**
  * Camelize a hyphen-delimited string.
+ * 驼峰化：将下划线连接的字符串转换为首字母大写的字符串
  */
 const camelizeRE = /-(\w)/g
 export const camelize = cached((str: string): string => {
@@ -171,6 +172,7 @@ export const camelize = cached((str: string): string => {
 
 /**
  * Capitalize a string.
+ * 首字母大写的函数
  */
 export const capitalize = cached((str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1)
@@ -191,8 +193,6 @@ export const hyphenate = cached((str: string): string => {
 // -如果每次都有判断对象是否需要回收，那么就需要遍历
 // - 将对象进行划分，统计，往往一个数据使用完以后就必须要使用了
 // - 一个对象如果在一次回收之后还保留下来，统计的红果是这个对象会比较持久在内存中驻留
-
-
 
 /**
  * Simple bind polyfill for environments that do not support it,

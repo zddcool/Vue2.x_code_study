@@ -36,6 +36,7 @@ export function initLifecycle (vm: Component) {
   // 定位第一个非抽象父组件，Vue 中定义了 transition keep-alive 等抽象组件
   let parent = options.parent
   if (parent && !options.abstract) {
+    // 创建两个`vm`实例之间的父子关系时，会跳过抽象组件的实例
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
