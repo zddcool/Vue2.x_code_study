@@ -50,7 +50,11 @@ function decodeAttr (value, shouldDecodeNewlines) {
   const re = shouldDecodeNewlines ? encodedAttrWithNewLines : encodedAttr
   return value.replace(re, match => decodingMap[match])
 }
-
+/**
+ * 解析template标签字符串，模板字符串
+ * @param {*} html 
+ * @param {*} options 
+ */
 export function parseHTML (html, options) {
   const stack = []
   const expectHTML = options.expectHTML
@@ -61,12 +65,13 @@ export function parseHTML (html, options) {
   while (html) {
     last = html
     // Make sure we're not in a plaintext content element like script/style
+    // 解析HTML标签，不解析script/style/textarea
     if (!lastTag || !isPlainTextElement(lastTag)) {
       let textEnd = html.indexOf('<')
       if (textEnd === 0) {
-        // Comment:
+        // Comment: 校验是否是注释
         if (comment.test(html)) {
-          const commentEnd = html.indexOf('-->')
+          const commentEnd = html.indexOf('-->') // 注释结束的索引
 
           if (commentEnd >= 0) {
             if (options.shouldKeepComment) {
@@ -77,6 +82,7 @@ export function parseHTML (html, options) {
           }
         }
 
+        // Also comments like <![if !IE]> <![endif]> 条件注释
         // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
         if (conditionalComment.test(html)) {
           const conditionalEnd = html.indexOf(']>')
@@ -97,7 +103,7 @@ export function parseHTML (html, options) {
         // End tag:
         const endTagMatch = html.match(endTag)
         if (endTagMatch) {
-          const curIndex = index
+          const curIndex = index // 备份当前索引
           advance(endTagMatch[0].length)
           parseEndTag(endTagMatch[1], curIndex, index)
           continue
@@ -179,11 +185,19 @@ export function parseHTML (html, options) {
   // Clean up any remaining tags
   parseEndTag()
 
+  /**
+   * 更新当前索引及当前模板字符串
+   * @param {number} n end index
+   */
   function advance (n) {
     index += n
     html = html.substring(n)
   }
 
+  /**
+   * 处理起始标签，包含起始标签中的属性、动态变量属性诸如class style v-指令、@ : #等
+   * @returns { undefined | Any: { tagName: string, attrs: Array<Any>, start: number, end: number, unarySlash: number }}
+   */
   function parseStartTag () {
     const start = html.match(startTagOpen)
     if (start) {
@@ -201,7 +215,7 @@ export function parseHTML (html, options) {
         match.attrs.push(attr)
       }
       if (end) {
-        match.unarySlash = end[1]
+        match.unarySlash = end[1] // 一元斜线符号所在的索引
         advance(end[0].length)
         match.end = index
         return match
@@ -209,6 +223,10 @@ export function parseHTML (html, options) {
     }
   }
 
+  /**
+   * 处理起始标签字符串上的属性
+   * @param {Any} match 
+   */
   function handleStartTag (match) {
     const tagName = match.tagName
     const unarySlash = match.unarySlash
@@ -224,6 +242,7 @@ export function parseHTML (html, options) {
 
     const unary = isUnaryTag(tagName) || !!unarySlash
 
+    // 解析从模板字符串中匹配的属性数组 对应的转换为name-value键值对
     const l = match.attrs.length
     const attrs = new Array(l)
     for (let i = 0; i < l; i++) {
@@ -243,6 +262,7 @@ export function parseHTML (html, options) {
     }
 
     if (!unary) {
+      // 双标签入栈
       stack.push({ tag: tagName, lowerCasedTag: tagName.toLowerCase(), attrs: attrs, start: match.start, end: match.end })
       lastTag = tagName
     }
@@ -252,6 +272,12 @@ export function parseHTML (html, options) {
     }
   }
 
+  /**
+   * 
+   * @param {string} tagName 
+   * @param {number} start 
+   * @param {number} end 
+   */
   function parseEndTag (tagName, start, end) {
     let pos, lowerCasedTagName
     if (start == null) start = index
