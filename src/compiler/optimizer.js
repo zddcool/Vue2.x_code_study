@@ -7,6 +7,9 @@ let isPlatformReservedTag
 
 const genStaticKeysCached = cached(genStaticKeys)
 
+// 优化静态内容。顾名思义，`Vue`中对于生成的`ast`会做优化，
+// 静态内容是指和数据没有关系，不需要每次都刷新的内容
+
 /**
  * Goal of the optimizer: walk the generated template AST tree
  * and detect sub-trees that are purely static, i.e. parts of
@@ -28,6 +31,11 @@ export function optimize (root: ?ASTElement, options: CompilerOptions) {
   markStaticRoots(root, false)
 }
 
+/**
+ * 通俗讲就是把AST对象上一些字段，对应生成相应的缓存
+ * @param {string} keys 
+ * @returns 
+ */
 function genStaticKeys (keys: string): Function {
   return makeMap(
     'type,tag,attrsList,attrsMap,plain,parent,children,attrs,start,end,rawAttrsMap' +
