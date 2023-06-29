@@ -95,7 +95,9 @@ export function genElement (el: ASTElement, state: CodegenState): string {
     return code
   }
 }
-
+/**
+ * 生成静态内容
+ */
 // hoist static sub-trees out
 function genStatic (el: ASTElement, state: CodegenState): string {
   el.staticProcessed = true
@@ -108,6 +110,7 @@ function genStatic (el: ASTElement, state: CodegenState): string {
   }
   state.staticRenderFns.push(`with(this){return ${genElement(el, state)}}`)
   state.pre = originalPreState
+  // _m 是渲染静态内容
   return `_m(${
     state.staticRenderFns.length - 1
   }${
@@ -266,10 +269,12 @@ export function genData (el: ASTElement, state: CodegenState): string {
   // slot target
   // only for non-scoped slots
   if (el.slotTarget && !el.slotScope) {
+    // 非作用域插槽
     data += `slot:${el.slotTarget},`
   }
   // scoped slots
   if (el.scopedSlots) {
+    // 作用域插槽
     data += `${genScopedSlots(el, el.scopedSlots, state)},`
   }
   // component v-model
@@ -580,7 +585,9 @@ function genComponent (
     children ? `,${children}` : ''
   })`
 }
-
+/**
+ * 静态属性及动态属性
+ */
 function genProps (props: Array<ASTAttr>): string {
   let staticProps = ``
   let dynamicProps = ``
@@ -595,6 +602,7 @@ function genProps (props: Array<ASTAttr>): string {
       staticProps += `"${prop.name}":${value},`
     }
   }
+  // 提取静态属性字符串索引从0到倒数第一个的字符串，即要去除最后一个','
   staticProps = `{${staticProps.slice(0, -1)}}`
   if (dynamicProps) {
     return `_d(${staticProps},[${dynamicProps.slice(0, -1)}])`

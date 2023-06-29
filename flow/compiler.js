@@ -65,8 +65,17 @@ declare type ASTIfConditions = Array<ASTIfCondition>;
 declare type ASTAttr = {
   name: string;
   value: any;
+  /**
+   * 用于区分是静态属性还是动态属性，动态属性指是经Vue指令绑定的属性、事件等
+   */
   dynamic?: boolean;
+  /**
+   * 在模板字符串中起始索引
+   */
   start?: number;
+  /**
+   * 在模板字符串中终止索引
+   */
   end?: number
 };
 
@@ -94,6 +103,9 @@ declare type ASTDirective = {
   end?: number;
 };
 
+/**
+ * 定义ASTNode的三种类型：1：标签，2：有表达式的纯文本，3：纯文本
+ */
 declare type ASTNode = ASTElement | ASTText | ASTExpression;
 
 declare type ASTElement = {
@@ -102,7 +114,13 @@ declare type ASTElement = {
   attrsList: Array<ASTAttr>;
   attrsMap: { [key: string]: any };
   rawAttrsMap: { [key: string]: ASTAttr };
+  /**
+   * 父元素的AST，值或为空
+   */
   parent: ASTElement | void;
+  /**
+   * 子元素的AST数组
+   */
   children: Array<ASTNode>;
 
   start?: number;
@@ -110,65 +128,178 @@ declare type ASTElement = {
 
   processed?: true;
 
+  /**
+   * 是否为静态元素
+   */
   static?: boolean;
+  /**
+   * 是否为静态根元素
+   */
   staticRoot?: boolean;
+  /**
+   * 静态内容是否在for循环
+   */
   staticInFor?: boolean;
+  /**
+   * 当前元素已经处理过静态内容
+   */
   staticProcessed?: boolean;
+  /**
+   * 元素需要动态编译
+   */
   hasBindings?: boolean;
 
   text?: string;
   attrs?: Array<ASTAttr>;
   dynamicAttrs?: Array<ASTAttr>;
   props?: Array<ASTAttr>;
+  /**
+   * 没有属性
+   */
   plain?: boolean;
+  /**
+   * 标签上有v-pre指令，标识该元素和子元素不用编译
+   */
   pre?: true;
+  /**
+   * 标签的命名空间
+   */
   ns?: string;
 
+  /**
+   * component元素的is属性值
+   */
   component?: string;
+  /**
+   * 标签上有inline-template
+   */
   inlineTemplate?: true;
   transitionMode?: string | null;
+  /**
+   * slot标签上的name属性值
+   */
   slotName?: ?string;
+  /**
+   * slot属性的值
+   */
   slotTarget?: ?string;
   slotTargetDynamic?: boolean;
+  /**
+   * 用于作用域插槽时template元素上，表示scope值
+   */
   slotScope?: ?string;
+  /**
+   * 添加作用域插槽时template元素父级上 键值对，键是slotTarget，值是当前template元素
+   */
   scopedSlots?: { [name: string]: ASTElement };
 
   ref?: string;
+  /**
+   * 是否包含在for循环内
+   */
   refInFor?: boolean;
 
+  /**
+   * v-if的表达式
+   */
   if?: string;
+  /**
+   * 标识当前元素已经处理过v-if
+   */
   ifProcessed?: boolean;
+  /**
+   * v-else-if的表达式
+   */
   elseif?: string;
+  /**
+   * v-else时为true
+   */
   else?: true;
+  /**
+   * 与v-if相关的一组元素
+   */
   ifConditions?: ASTIfConditions;
 
+  // v-for="(item, index) in items" 
+  // v-for="(value, key, index) in object"
+  /**
+   * 要遍历的数据items
+   */
   for?: string;
+  /**
+   * 标识当前元素已经处理过v-for
+   */
   forProcessed?: boolean;
+  /**
+   * 虚拟dom做diff时候的key，这里如果v-for在自定义元素上，则必须有key
+   */
   key?: string;
+  /**
+   * 遍历数组时的元素item或遍历对象时的值value
+   */
   alias?: string;
+  /**
+   * 遍历数组的索引index或遍历对象时的键key
+   */
   iterator1?: string;
+  /**
+   * 遍历对象时的索引index
+   */
   iterator2?: string;
 
+  /**
+   * 静态class
+   */
   staticClass?: string;
+  /**
+   * 有数据绑定的class表达式
+   */
   classBinding?: string;
+  /**
+   * 静态style
+   */
   staticStyle?: string;
+  /**
+   * 有数据绑定的style表达式
+   */
   styleBinding?: string;
+  /**
+   * 没有.native来修饰添加的事件
+   */
   events?: ASTElementHandlers;
+  /**
+   * 通过.native来修饰添加的事件
+   */
   nativeEvents?: ASTElementHandlers;
 
   transition?: string | true;
   transitionOnAppear?: boolean;
 
+  /**
+   * v-model定义双向数据绑定？
+   */
   model?: {
     value: string;
     callback: string;
     expression: string;
   };
 
+  /**
+   * 存放普通指令相关信息
+   */
   directives?: Array<ASTDirective>;
 
+  /**
+   * 为true时表示，该标签是style或包含脚本的script
+   */
   forbidden?: true;
+  /**
+   * v-once
+   */
   once?: true;
+  /**
+   * 标识当前元素已经处理过v-once
+   */
   onceProcessed?: boolean;
   wrapData?: (code: string) => string;
   wrapListeners?: (code: string) => string;
@@ -185,6 +316,9 @@ declare type ASTExpression = {
   expression: string;
   text: string;
   tokens: Array<string | Object>;
+  /**
+   * 是否为静态元素
+   */
   static?: boolean;
   // 2.4 ssr optimization
   ssrOptimizability?: number;
@@ -195,7 +329,13 @@ declare type ASTExpression = {
 declare type ASTText = {
   type: 3;
   text: string;
+  /**
+   * 是否为静态元素
+   */
   static?: boolean;
+  /**
+   * 是否为注释
+   */
   isComment?: boolean;
   // 2.4 ssr optimization
   ssrOptimizability?: number;
@@ -203,6 +343,7 @@ declare type ASTText = {
   end?: number;
 };
 
+// 单文件组件解析相关的声明
 // SFC-parser related declarations
 
 // an object format describing a single-file component

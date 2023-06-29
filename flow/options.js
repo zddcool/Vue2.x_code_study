@@ -8,6 +8,9 @@ declare type InternalComponentOptions = {
 
 type InjectKey = string | Symbol;
 
+/***
+ * 组件可选项，比如常见的 data methods watch computed 等等属性和方法
+ */
 declare type ComponentOptions = {
   componentId?: string;
 
@@ -82,6 +85,9 @@ declare type ComponentOptions = {
   _base: Class<Component>;
 };
 
+/**
+ * 对props属性可选项的类型定义
+ */
 declare type PropOptions = {
   type: Function | Array<Function> | null;
   default: any;

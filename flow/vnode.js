@@ -32,6 +32,9 @@ declare type VNodeWithData = {
   isRootInsert: boolean;
 };
 
+/**
+ * 虚拟节点数据，flow/vnode.js
+ */
 declare interface VNodeData {
   key?: string | number;
   slot?: string;

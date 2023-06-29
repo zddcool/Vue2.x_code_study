@@ -800,7 +800,10 @@ function processComponent (el) {
     el.inlineTemplate = true
   }
 }
-
+/**
+ * 处理绑定的事件、数据以及添加的其它属性等
+ * @param {ASTElement}} el 
+ */
 function processAttrs (el) {
   const list = el.attrsList
   let i, l, name, rawName, value, modifiers, syncGen, isDynamic
@@ -888,6 +891,7 @@ function processAttrs (el) {
           addAttr(el, name, value, list[i], isDynamic)
         }
       } else if (onRE.test(name)) { // v-on
+        // 事件处理
         name = name.replace(onRE, '')
         isDynamic = dynamicArgRE.test(name)
         if (isDynamic) {

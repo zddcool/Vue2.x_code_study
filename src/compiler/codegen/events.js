@@ -4,6 +4,7 @@ const fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function(?:\s+[\w$]+)?\s*\(/
 const fnInvokeRE = /\([^)]*?\);*$/
 const simplePathRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?']|\["[^"]*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*$/
 
+// 键盘事件按键keyCode 别称
 // KeyboardEvent.keyCode aliases
 const keyCodes: { [key: string]: number | Array<number> } = {
   esc: 27,
@@ -17,6 +18,7 @@ const keyCodes: { [key: string]: number | Array<number> } = {
   'delete': [8, 46]
 }
 
+// 键盘事件按键名别称
 // KeyboardEvent.key aliases
 const keyNames: { [key: string]: string | Array<string> } = {
   // #7880: IE11 and Edge use `Esc` for Escape key name.
@@ -40,18 +42,23 @@ const keyNames: { [key: string]: string | Array<string> } = {
 const genGuard = condition => `if(${condition})return null;`
 
 const modifierCode: { [key: string]: string } = {
+  // 事件标识符
   stop: '$event.stopPropagation();',
   prevent: '$event.preventDefault();',
   self: genGuard(`$event.target !== $event.currentTarget`),
+  // 系统标识符
   ctrl: genGuard(`!$event.ctrlKey`),
   shift: genGuard(`!$event.shiftKey`),
   alt: genGuard(`!$event.altKey`),
   meta: genGuard(`!$event.metaKey`),
+  // 鼠标标识符
   left: genGuard(`'button' in $event && $event.button !== 0`),
   middle: genGuard(`'button' in $event && $event.button !== 1`),
   right: genGuard(`'button' in $event && $event.button !== 2`)
 }
-
+/**
+ * 静态处理函数及动态处理函数
+ */
 export function genHandlers (
   events: ASTElementHandlers,
   isNative: boolean
@@ -92,7 +99,9 @@ function genWeexHandler (params: Array<any>, handlerCode: string) {
     `params:${JSON.stringify(bindings)}\n` +
     '}'
 }
-
+/**
+ * 传入参数是数组时，函数自调用返回数组字符串
+ */
 function genHandler (handler: ASTElementHandler | Array<ASTElementHandler>): string {
   if (!handler) {
     return 'function(){}'
@@ -102,6 +111,7 @@ function genHandler (handler: ASTElementHandler | Array<ASTElementHandler>): str
     return `[${handler.map(handler => genHandler(handler)).join(',')}]`
   }
 
+  // 是否是method的对象 函数表达式 函数调用
   const isMethodPath = simplePathRE.test(handler.value)
   const isFunctionExpression = fnExpRE.test(handler.value)
   const isFunctionInvocation = simplePathRE.test(handler.value.replace(fnInvokeRE, ''))
@@ -118,6 +128,7 @@ function genHandler (handler: ASTElementHandler | Array<ASTElementHandler>): str
       isFunctionInvocation ? `return ${handler.value}` : handler.value
     }}` // inline statement
   } else {
+    // 处理标识符有关的事件
     let code = ''
     let genModifierCode = ''
     const keys = []
@@ -161,7 +172,9 @@ function genHandler (handler: ASTElementHandler | Array<ASTElementHandler>): str
     return `function($event){${code}${handlerCode}}`
   }
 }
-
+/**
+ * 过滤键盘按键/按键码
+ */
 function genKeyFilter (keys: Array<string>): string {
   return (
     // make sure the key filters only apply to KeyboardEvents
@@ -171,7 +184,9 @@ function genKeyFilter (keys: Array<string>): string {
     `${keys.map(genFilterCode).join('&&')})return null;`
   )
 }
-
+/**
+ * 过滤键盘按键/按键码
+ */
 function genFilterCode (key: string): string {
   const keyVal = parseInt(key, 10)
   if (keyVal) {

@@ -76,6 +76,12 @@ export function addHandler (
   range?: Range,
   dynamic?: boolean
 ) {
+  /**
+   * 事件修饰符 stop prevent capture self once passive
+   * 按键修饰符 KeyboardEvent.key/keyCode 例如 .enter .tab
+   * 系统修饰符 ctrl alt shift meta exact 
+   * 鼠标按钮修饰符 left right middle
+   */
   modifiers = modifiers || emptyObject
   // warn prevent and passive modifier
   /* istanbul ignore if */
