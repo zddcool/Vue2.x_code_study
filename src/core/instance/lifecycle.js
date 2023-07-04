@@ -61,6 +61,9 @@ export function lifecycleMixin (Vue: Class<Component>) {
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
+    /**
+     * previous vitrual node
+     */
     const prevVnode = vm._vnode
     const restoreActiveInstance = setActiveInstance(vm)
     vm._vnode = vnode
@@ -97,6 +100,9 @@ export function lifecycleMixin (Vue: Class<Component>) {
     }
   }
 
+  /**
+   * 销毁`vue`对象时，通过给`__patch__`第二个参数传入`null`，来从页面中删除相应dom
+   */
   Vue.prototype.$destroy = function () {
     const vm: Component = this
     if (vm._isBeingDestroyed) {

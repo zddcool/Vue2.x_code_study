@@ -198,6 +198,7 @@ export function genFor (
   const iterator1 = el.iterator1 ? `,${el.iterator1}` : ''
   const iterator2 = el.iterator2 ? `,${el.iterator2}` : ''
 
+  // 自定义元素且不是slot template,则必须有el.key
   if (process.env.NODE_ENV !== 'production' &&
     state.maybeComponent(el) &&
     el.tag !== 'slot' &&

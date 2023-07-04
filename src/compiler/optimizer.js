@@ -78,6 +78,7 @@ function markStatic (node: ASTNode) {
 function markStaticRoots (node: ASTNode, isInFor: boolean) {
   if (node.type === 1) {
     if (node.static || node.once) {
+      // 注：`v-once`的元素在第一次渲染之后，会被当做静态内容来处理
       node.staticInFor = isInFor
     }
     // For a node to qualify as a static root, it should have children that

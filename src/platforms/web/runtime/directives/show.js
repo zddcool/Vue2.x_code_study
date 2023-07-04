@@ -16,7 +16,7 @@ export default {
     const originalDisplay = el.__vOriginalDisplay =
       el.style.display === 'none' ? '' : el.style.display
     if (value && transition) {
-      vnode.data.show = true
+      vnode.data.show = true // 在过渡中对v-show的特殊处理标识
       enter(vnode, () => {
         el.style.display = originalDisplay
       })

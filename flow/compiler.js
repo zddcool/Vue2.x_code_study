@@ -220,10 +220,11 @@ declare type ASTElement = {
    */
   ifConditions?: ASTIfConditions;
 
-  // v-for="(item, index) in items" 
-  // v-for="(value, key, index) in object"
   /**
-   * 要遍历的数据items
+   * v-for="item in items"
+   * v-for="(item, index) in items" 
+   * v-for="(value, key, index) in object"
+   * 要遍历的数据items 对象或数组或数字或字符串
    */
   for?: string;
   /**

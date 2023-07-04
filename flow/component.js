@@ -83,6 +83,9 @@ declare interface Component {
   // rendering
   _render: () => VNode;
 
+  /**
+   * 元素渲染、`vnode`做diff并修改、元素销毁
+   */
   __patch__: (
     a: Element | VNode | void,
     b: VNode,

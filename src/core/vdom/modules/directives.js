@@ -19,7 +19,9 @@ function updateDirectives (oldVnode: VNodeWithData, vnode: VNodeWithData) {
 }
 
 function _update (oldVnode, vnode) {
+  // 第一次实例化组件时，oldVnode是emptyNode
   const isCreate = oldVnode === emptyNode
+  // 销毁组件时，vnode是emptyNode
   const isDestroy = vnode === emptyNode
   const oldDirs = normalizeDirectives(oldVnode.data.directives, oldVnode.context)
   const newDirs = normalizeDirectives(vnode.data.directives, vnode.context)
@@ -81,6 +83,10 @@ function _update (oldVnode, vnode) {
 
 const emptyModifiers = Object.create(null)
 
+/**
+ * 从组件的`vm.$options.directives`中获取指令的定义
+ * `resolveAsset`方法就是获取指令的定义，会转为驼峰、中划线的各种形式来尝试获取。
+ */
 function normalizeDirectives (
   dirs: ?Array<VNodeDirective>,
   vm: Component

@@ -272,6 +272,9 @@ export function parse (
         element = preTransforms[i](element, options) || element
       }
 
+      /**
+       * v-pre 跳过该元素及子元素的编译过程。
+       */
       if (!inVPre) {
         processPre(element)
         if (element.pre) {
@@ -561,9 +564,9 @@ export function parseFor (exp: string): ?ForParseResult {
 
 /**
  * 处理标签上v-if v-else v-else-if指令
- * @param {string} el 
+ * @param {ASTElement} el 
  */
-function processIf (el) {
+function processIf (el: ASTElement) {
   const exp = getAndRemoveAttr(el, 'v-if')
   if (exp) {
     el.if = exp
@@ -582,7 +585,7 @@ function processIf (el) {
   }
 }
 
-function processIfConditions (el, parent) {
+function processIfConditions (el: ASTElement, parent) {
   const prev = findPrevElement(parent.children)
   if (prev && prev.if) {
     addIfCondition(prev, {
@@ -808,9 +811,11 @@ function processAttrs (el) {
   const list = el.attrsList
   let i, l, name, rawName, value, modifiers, syncGen, isDynamic
   for (i = 0, l = list.length; i < l; i++) {
+    // list[i]: ASTAttr
     name = rawName = list[i].name
     value = list[i].value
     if (dirRE.test(name)) {
+      // 处理动态绑定的属性，诸如v- 指令，及简写形式 @ # ： .
       // mark element as dynamic
       el.hasBindings = true
       // modifiers
@@ -838,6 +843,7 @@ function processAttrs (el) {
           )
         }
         if (modifiers) {
+          // v-bind 指令的修饰符 .prop .camel .sync 参考链接：https://v2.cn.vuejs.org/v2/api/#v-bind
           if (modifiers.prop && !isDynamic) {
             name = camelize(name)
             if (name === 'innerHtml') name = 'innerHTML'
@@ -1007,6 +1013,9 @@ function guardIESVGBug (attrs) {
   return res
 }
 
+/**
+ * 不能用`for`循环的值来作为v-model的`value`
+ */
 function checkForAliasModel (el, value) {
   let _el = el
   while (_el) {
