@@ -52,3 +52,18 @@ export const getXlinkProp = (name: string): string => {
 export const isFalsyAttrValue = (val: any): boolean => {
   return val == null || val === false
 }
+
+/*
+ * 本文件对外曝露出的属性与方法
+  {
+    isReservedAttr, // 保留的属性，style class
+    mustUseProp, // 针对input,textarea,option,select,progress,video标签时，必须使用prop属性进行数据输入
+    isEnumeratedAttr,
+    convertEnumeratedValue,
+    isBooleanAttr, // 值是布尔类型的标签属性
+    xlinkNS, // xlink namespace
+    isXlink, // 判断是否是xlink
+    getXlinkProp,
+    isFalsyAttrValue, // 属性值是false或者null
+  }
+*/

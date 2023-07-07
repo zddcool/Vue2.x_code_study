@@ -75,3 +75,17 @@ export function isUnknownElement (tag: string): boolean {
 }
 
 export const isTextInputType = makeMap('text,number,password,search,email,tel,url')
+
+/**
+ * 与HTML相关，标签
+{
+  namespaceMap, // svg and math
+  isHTMLTag, // 是否是常见的HTML标签
+  isSVG,
+  isPreTag, // 是否是pre标签
+  isReservedTag, // 是否是保留的标签
+  getTagNamespace, // 获取标签命名空间
+  isUnknownElement,
+  isTextInputType,
+}
+ */

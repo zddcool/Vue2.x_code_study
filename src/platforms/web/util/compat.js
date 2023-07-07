@@ -14,3 +14,11 @@ function getShouldDecode (href: boolean): boolean {
 export const shouldDecodeNewlines = inBrowser ? getShouldDecode(false) : false
 // #6828: chrome encodes content in a[href]
 export const shouldDecodeNewlinesForHref = inBrowser ? getShouldDecode(true) : false
+
+/** 
+ * compat: 兼容性
+{
+  shouldDecodeNewlines,
+  shouldDecodeNewlinesForHref,
+}
+ */

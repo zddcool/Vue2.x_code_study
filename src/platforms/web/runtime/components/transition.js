@@ -196,3 +196,7 @@ export default {
     return rawChild
   }
 }
+
+/**
+ * 默认导出transition内置抽象组件，自定义了render渲染函数
+ */

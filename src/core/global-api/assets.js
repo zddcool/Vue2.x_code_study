@@ -7,11 +7,13 @@ export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.
    */
+  // directive component filter
   ASSET_TYPES.forEach(type => {
     Vue[type] = function (
       id: string,
       definition: Function | Object
     ): Function | Object | void {
+      // 全局挂载的指令、组件、过滤器均会添加到Vue的options相对应的对象上
       if (!definition) {
         return this.options[type + 's'][id]
       } else {

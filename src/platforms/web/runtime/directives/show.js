@@ -58,3 +58,8 @@ export default {
     }
   }
 }
+
+/**
+ * 配置了v-show指令的配置对象，定义了bind、update、unbind方法；
+ * 此处可看到v-show指令通过修改display属性，实现对组件显隐的控制
+ */

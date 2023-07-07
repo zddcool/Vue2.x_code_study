@@ -5,7 +5,7 @@ import { FunctionalRenderContext } from 'core/vdom/create-functional-component'
 
 /**
  * 定义全局 API，给 Vue 对象添加了静态属性和方法
- * config util set delete nextTick options 
+ * config util set delete nextTick observable options use mixin extend directive component filter
  */
 initGlobalAPI(Vue)
 

@@ -46,12 +46,13 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   Vue.nextTick = nextTick
 
   // 2.6 explicit observable API
-  Vue.observable = <T>(obj: T): T => {
+  Vue.observable = (obj: T): T => {
     observe(obj)
     return obj
-  }
+  };
 
   Vue.options = Object.create(null)
+  // options属性上挂载directives, components, filters
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })
@@ -65,5 +66,6 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   initUse(Vue)
   initMixin(Vue)
   initExtend(Vue)
+  // 全局挂载 directive component filter
   initAssetRegisters(Vue)
 }

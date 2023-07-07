@@ -154,6 +154,7 @@ export function mountComponent (
 ): Component {
   vm.$el = el
   if (!vm.$options.render) {
+    // 未定义render函数, 创建空虚拟节点函数赋值给render
     vm.$options.render = createEmptyVNode
     if (process.env.NODE_ENV !== 'production') {
       /* istanbul ignore if */
@@ -173,6 +174,7 @@ export function mountComponent (
       }
     }
   }
+  // 调用生命周期钩子beforeMount
   callHook(vm, 'beforeMount')
 
   let updateComponent
@@ -196,6 +198,7 @@ export function mountComponent (
     }
   } else {
     updateComponent = () => {
+      // 调用实例的 _update 方法
       vm._update(vm._render(), hydrating)
     }
   }
@@ -215,7 +218,9 @@ export function mountComponent (
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
+    // 虚拟节点创建完成
     vm._isMounted = true
+    // 调用生命周期钩子mounted
     callHook(vm, 'mounted')
   }
   return vm

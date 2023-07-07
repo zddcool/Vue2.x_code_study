@@ -32,6 +32,7 @@ Vue.prototype.$mount = function (
   }
 
   const options = this.$options
+  // 如果没有定义 render 方法，则会把 el 或者 template 字符串转换成 render 方法
   // resolve template/el and convert to render function
   if (!options.render) {
     let template = options.template
@@ -98,7 +99,7 @@ function getOuterHTML (el: Element): string {
     return container.innerHTML
   }
 }
-
+// 挂载全局编译函数
 Vue.compile = compileToFunctions
 
 export default Vue

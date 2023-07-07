@@ -2,6 +2,9 @@
 
 import { cached, extend, toObject } from 'shared/util'
 
+/**
+ * css文本字符串先以;分隔后获得属性数组，再对数组中的每一个元素以:分隔，得到css属性键值对，返回相应的对象
+ */
 export const parseStyleText = cached(function (cssText) {
   const res = {}
   const listDelimiter = /;(?![^(]*\))/g
@@ -25,6 +28,9 @@ function normalizeStyleData (data: VNodeData): ?Object {
     : style
 }
 
+/**
+ * 对应于标签上动态绑定的style属性的两种书写形式：数组形式及字符串
+ */
 // normalize possible array / string values into Object
 export function normalizeStyleBinding (bindingStyle: any): ?Object {
   if (Array.isArray(bindingStyle)) {
@@ -69,3 +75,11 @@ export function getStyle (vnode: VNodeWithData, checkChild: boolean): Object {
   }
   return res
 }
+
+/**
+{
+  parseStyleText,
+  normalizeStyleBinding,
+  getStyle,
+}
+ */

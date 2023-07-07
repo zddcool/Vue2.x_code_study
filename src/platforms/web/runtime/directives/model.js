@@ -145,3 +145,6 @@ function trigger (el, type) {
 }
 
 export default directive
+/**
+ * 配置了v-model指令的配置对象，定义了inserted、componentUpdated 方法
+ */
