@@ -29,6 +29,7 @@ function _update (oldVnode, vnode) {
   const dirsWithInsert = []
   const dirsWithPostpatch = []
 
+  // 自定义指令定义了五个可选的钩子分别是 bind, update, inserted, componented, unbind
   let key, oldDir, dir
   for (key in newDirs) {
     oldDir = oldDirs[key]

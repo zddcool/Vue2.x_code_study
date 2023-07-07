@@ -103,6 +103,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
 // 合并构造器及构造器父级上定义的`options
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
+  // 有super属性，说明Ctor是通过Vue.extend()方法创建的子类
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions
