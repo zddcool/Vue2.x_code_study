@@ -349,13 +349,29 @@ declare type ASTText = {
 
 // an object format describing a single-file component
 declare type SFCDescriptor = {
+  /**
+   * vue文件三段式 template 标签
+   */
   template: ?SFCBlock;
+  /**
+   * vue文件三段式 script 标签
+   */
   script: ?SFCBlock;
+  /**
+   * vue文件三段式 style 标签
+   */
   styles: Array<SFCBlock>;
+  /**
+   * 自定义段
+   */
   customBlocks: Array<SFCBlock>;
+  /**
+   * 出错信息
+   */
   errors: Array<string | WarningMessage>;
 }
 
+// 与ASTElement很像的声明
 declare type SFCBlock = {
   type: string;
   content: string;

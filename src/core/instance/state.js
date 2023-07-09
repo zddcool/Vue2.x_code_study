@@ -203,6 +203,7 @@ function initComputed (vm: Component, computed: Object) {
     }
 
     if (!isSSR) {
+      // lazy watcher
       // create internal watcher for the computed property. 给计算属性创建内部观察者对象
       watchers[key] = new Watcher(
         vm,
@@ -260,6 +261,9 @@ export function defineComputed (
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+/**
+ * 返回一个可获取计算属性值的函数，函数内部通过watcher依赖收集
+ */
 function createComputedGetter (key) {
   return function computedGetter () {
     const watcher = this._computedWatchers && this._computedWatchers[key]
@@ -275,6 +279,9 @@ function createComputedGetter (key) {
   }
 }
 
+/**
+ * 返回一个可获取计算属性值的函数,内部调用
+ */
 function createGetterInvoker(fn) {
   return function computedGetter () {
     return fn.call(this, this)
@@ -376,6 +383,7 @@ export function stateMixin (Vue: Class<Component>) {
     }
     options = options || {}
     options.user = true
+    // user watcher
     const watcher = new Watcher(vm, expOrFn, cb, options)
     if (options.immediate) {
       const info = `callback for immediate watcher "${watcher.expression}"`

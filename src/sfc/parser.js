@@ -10,6 +10,7 @@ const isSpecialTag = makeMap('script,style,template', true)
 
 /**
  * Parse a single-file component (*.vue) file into an SFC Descriptor Object.
+ * 内部调用了模板解析的核心模块parseHTML
  */
 export function parseComponent (
   content: string,
@@ -60,6 +61,7 @@ export function parseComponent (
         }, {})
       }
       if (isSpecialTag(tag)) {
+        // tag is template, script or style.
         checkAttrs(currentBlock, attrs)
         if (tag === 'style') {
           sfc.styles.push(currentBlock)
